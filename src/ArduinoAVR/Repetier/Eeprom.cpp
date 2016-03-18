@@ -63,12 +63,12 @@ void EEPROM::update(GCode *com)
 
 void EEPROM::restoreEEPROMSettingsFromConfiguration()
 {
-	// can only be done right if we also update permanent values not cached!
-	EEPROM::initalizeUncached();
+#if EEPROM_MODE != 0
+    // can only be done right if we also update permanent values not cached!
+    EEPROM::initalizeUncached();
     uint8_t newcheck = computeChecksum();
     if(newcheck != HAL::eprGetByte(EPR_INTEGRITY_BYTE))
-		HAL::eprSetByte(EPR_INTEGRITY_BYTE, newcheck);	
-#if EEPROM_MODE != 0
+        HAL::eprSetByte(EPR_INTEGRITY_BYTE, newcheck);
     baudrate = BAUDRATE;
     maxInactiveTime = MAX_INACTIVE_TIME * 1000L;
     stepperInactiveTime = STEPPER_INACTIVE_TIME * 1000L;
@@ -666,7 +666,7 @@ void EEPROM::readDataFromEEPROM(bool includeExtruder)
 #if NONLINEAR_SYSTEM
             HAL::eprSetInt16(EPR_DELTA_SEGMENTS_PER_SECOND_PRINT,DELTA_SEGMENTS_PER_SECOND_PRINT);
             HAL::eprSetInt16(EPR_DELTA_SEGMENTS_PER_SECOND_MOVE,DELTA_SEGMENTS_PER_SECOND_MOVE);
-#endif			
+#endif
 #if DRIVE_SYSTEM == DELTA
             HAL::eprSetFloat(EPR_DELTA_DIAGONAL_ROD_LENGTH,DELTA_DIAGONAL_ROD);
             HAL::eprSetFloat(EPR_DELTA_HORIZONTAL_RADIUS,ROD_RADIUS);
