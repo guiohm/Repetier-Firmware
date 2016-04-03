@@ -63,12 +63,12 @@ void EEPROM::update(GCode *com)
 
 void EEPROM::restoreEEPROMSettingsFromConfiguration()
 {
+	// can only be done right if we also update permanent values not cached!
 #if EEPROM_MODE != 0
-    // can only be done right if we also update permanent values not cached!
-    EEPROM::initalizeUncached();
+	EEPROM::initalizeUncached();
     uint8_t newcheck = computeChecksum();
     if(newcheck != HAL::eprGetByte(EPR_INTEGRITY_BYTE))
-        HAL::eprSetByte(EPR_INTEGRITY_BYTE, newcheck);
+		HAL::eprSetByte(EPR_INTEGRITY_BYTE, newcheck);	
     baudrate = BAUDRATE;
     maxInactiveTime = MAX_INACTIVE_TIME * 1000L;
     stepperInactiveTime = STEPPER_INACTIVE_TIME * 1000L;
@@ -112,7 +112,11 @@ void EEPROM::restoreEEPROMSettingsFromConfiguration()
     Printer::yMin = Y_MIN_POS;
     Printer::zMin = Z_MIN_POS;
 #if NONLINEAR_SYSTEM
+#ifdef ROD_RADIUS
 	Printer::radius0 = ROD_RADIUS;
+#else
+	Printer::radius0 = 0;
+#endif	
 #endif
 #if ENABLE_BACKLASH_COMPENSATION
     Printer::backlashX = X_BACKLASH;

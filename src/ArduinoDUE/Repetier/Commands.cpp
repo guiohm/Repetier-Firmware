@@ -955,11 +955,18 @@ void Commands::processGCode(GCode *com) {
             Printer::unitIsInches = 0;
             break;
         case 28: { //G28 Home all Axis one at a time
+#if defined(SUPPORT_LASER) && SUPPORT_LASER
+				bool oldLaser = LaserDriver::laserOn;
+			    LaserDriver::laserOn = false;
+#endif				
                 uint8_t homeAllAxis = (com->hasNoXYZ() && !com->hasE());
                 if(com->hasE())
                     Printer::currentPositionSteps[E_AXIS] = 0;
                 if(homeAllAxis || !com->hasNoXYZ())
                     Printer::homeAxis(homeAllAxis || com->hasX(),homeAllAxis || com->hasY(),homeAllAxis || com->hasZ());
+#if defined(SUPPORT_LASER) && SUPPORT_LASER
+			    LaserDriver::laserOn = oldLaser;
+#endif
                 Printer::updateCurrentPosition();
             }
             break;
@@ -969,7 +976,7 @@ void Commands::processGCode(GCode *com) {
                 float actTemp[NUM_EXTRUDER];
                 for(int i = 0; i < NUM_EXTRUDER; i++)
                     actTemp[i] = extruder[i].tempControl.targetTemperatureC;
-	            Printer::moveToReal(IGNORE_COORDINATE,IGNORE_COORDINATE,RMath::max(EEPROM::zProbeHeight(),ZHOME_HEAT_HEIGHT),IGNORE_COORDINATE,Printer::homingFeedrate[Z_AXIS]);
+	            Printer::moveToReal(IGNORE_COORDINATE,IGNORE_COORDINATE,RMath::max(EEPROM::zProbeHeight(),static_cast<float>(ZHOME_HEAT_HEIGHT)),IGNORE_COORDINATE,Printer::homingFeedrate[Z_AXIS]);
                 Commands::waitUntilEndOfAllMoves();
 #if ZHOME_HEAT_ALL
                 for(int i = 0; i < NUM_EXTRUDER; i++) {
@@ -1082,7 +1089,7 @@ void Commands::processGCode(GCode *com) {
             float actTemp[NUM_EXTRUDER];
             for(int i = 0; i < NUM_EXTRUDER; i++)
                 actTemp[i] = extruder[i].tempControl.targetTemperatureC;
-            Printer::moveToReal(IGNORE_COORDINATE,IGNORE_COORDINATE,RMath::max(EEPROM::zProbeHeight(),ZHOME_HEAT_HEIGHT),IGNORE_COORDINATE,Printer::homingFeedrate[Z_AXIS]);
+            Printer::moveToReal(IGNORE_COORDINATE,IGNORE_COORDINATE,RMath::max(EEPROM::zProbeHeight(),static_cast<float>(ZHOME_HEAT_HEIGHT)),IGNORE_COORDINATE,Printer::homingFeedrate[Z_AXIS]);
             Commands::waitUntilEndOfAllMoves();
 #if ZHOME_HEAT_ALL
             for(int i = 0; i < NUM_EXTRUDER; i++) {
@@ -1135,7 +1142,7 @@ void Commands::processGCode(GCode *com) {
                     float actTemp[NUM_EXTRUDER];
                     for(int i = 0; i < NUM_EXTRUDER; i++)
                         actTemp[i] = extruder[i].tempControl.targetTemperatureC;
-		            Printer::moveToReal(IGNORE_COORDINATE,IGNORE_COORDINATE,RMath::max(EEPROM::zProbeHeight(),ZHOME_HEAT_HEIGHT),IGNORE_COORDINATE,Printer::homingFeedrate[Z_AXIS]);
+		            Printer::moveToReal(IGNORE_COORDINATE,IGNORE_COORDINATE,RMath::max(EEPROM::zProbeHeight(),static_cast<float>(ZHOME_HEAT_HEIGHT)),IGNORE_COORDINATE,Printer::homingFeedrate[Z_AXIS]);
                     Commands::waitUntilEndOfAllMoves();
 #if ZHOME_HEAT_ALL
                     for(int i = 0; i < NUM_EXTRUDER; i++) {
@@ -2000,14 +2007,32 @@ void Commands::processMCode(GCode *com) {
 #endif
 #if FEATURE_DITTO_PRINTING
         case 280: // M280
+#if DUAL_X_AXIS
+			Extruder::dittoMode = 0;
+			Extruder::selectExtruderById(0);
+			Printer::homeXAxis();
+			if(com->hasS() && com->S > 0) {
+				Extruder::current = &extruder[1];
+				PrintLine::moveRelativeDistanceInSteps(-Extruder::current->xOffset + static_cast<int32_t>(Printer::xLength*0.5*Printer::axisStepsPerMM[X_AXIS]), 0, 0, 0, EXTRUDER_SWITCH_XY_SPEED, true, true);
+				Printer::currentPositionSteps[X_AXIS] = Printer::xMinSteps;
+				Extruder::current = &extruder[0];
+				Extruder::dittoMode = 1;
+			}
+#else		
             if(com->hasS()) { // Set ditto mode S: 0 = off, 1 = 1 extra extruder, 2 = 2 extra extruder, 3 = 3 extra extruders
                 Extruder::dittoMode = com->S;
             }
+#endif			
             break;
 #endif
         case 281: // Trigger watchdog
 #if FEATURE_WATCHDOG
             {
+				if(com->hasX()) {
+					HAL::stopWatchdog();
+					Com::printFLN(PSTR("Watchdog disabled"));
+					break;
+				}
                 Com::printInfoFLN(PSTR("Triggering watchdog. If activated, the printer will reset."));
                 Printer::kill(false);
                 HAL::delayMilliseconds(200); // write output, make sure heaters are off for safety
@@ -2311,7 +2336,7 @@ void Commands::processMCode(GCode *com) {
 #endif
             break;
 #if 0 && UI_DISPLAY_TYPE != NO_DISPLAY
-        // some debuggingcommands normally disabled
+        // some debugging commands normally disabled
         case 888:
             Com::printFLN(PSTR("Selected language:"),(int)Com::selectedLanguage);
             Com::printF(PSTR("Translation:"));
@@ -2320,19 +2345,21 @@ void Commands::processMCode(GCode *com) {
         case 889:
             uid.showLanguageSelectionWizard();
             break;
-        case 890: {
-                if(com->hasX() && com->hasY()) {
-                    float c = Printer::bendingCorrectionAt(com->X,com->Y);
-                    Com::printF(PSTR("Bending at ("),com->X);
-                    Com::printF(PSTR(","),com->Y);
-                    Com::printFLN(PSTR(") = "),c);
-                }
-            }
-            break;
         case 891:
             if(com->hasS())
                 EEPROM::setVersion(com->S);
             break;
+#endif
+#if FEATURE_AUTOLEVEL && FEATURE_Z_PROBE
+		case 890: {
+			if(com->hasX() && com->hasY()) {
+				float c = Printer::bendingCorrectionAt(com->X,com->Y);
+				Com::printF(PSTR("Bending at ("),com->X);
+				Com::printF(PSTR(","),com->Y);
+				Com::printFLN(PSTR(") = "),c);
+			}
+		}
+break;
 #endif
 		case 999: // Stop fatal error take down
 			if(com->hasS())
