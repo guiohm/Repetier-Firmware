@@ -287,7 +287,7 @@ controlled by settings in extruder 0 definition. */
 #define EXT0_MAX_START_FEEDRATE 40
 // Acceleration in mm/s^2
 //  Overridden if EEPROM activated.
-#define EXT0_MAX_ACCELERATION 12000 //5000
+#define EXT0_MAX_ACCELERATION 30000 //5000
 /** Type of heat manager for this extruder.
 - 0 = Simply switch on/off if temperature is reached. Works always.
 - 1 = PID Temperature control. Is better but needs good PID values. Defaults are a good start for most extruder.
@@ -332,7 +332,7 @@ the quadratic factor make sure ENABLE_QUADRATIC_ADVANCE is defined.
 L is the linear factor and seems to be working better then the quadratic dependency.
 */
 #define EXT0_ADVANCE_K 0.0f
-#define EXT0_ADVANCE_L 0.01f
+#define EXT0_ADVANCE_L 0.0f
 /* Motor steps to remove backlash for advance algorithm. These are the steps
 needed to move the motor cog in reverse direction until it hits the driving
 cog. Direct drive extruder need 0. */
@@ -491,13 +491,13 @@ M140 command, after a given temperature is reached. */
 /** auto-retract converts pure extrusion moves into retractions. Beware that
  simple extrusion e.g. over Repetier-Host will then not work! */
 #define AUTORETRACT_ENABLED 0
-#define RETRACTION_LENGTH 2
-#define RETRACTION_LONG_LENGTH 13
-#define RETRACTION_SPEED 40
+#define RETRACTION_LENGTH 5
+#define RETRACTION_LONG_LENGTH 12
+#define RETRACTION_SPEED 200
 #define RETRACTION_Z_LIFT 0
-#define RETRACTION_UNDO_EXTRA_LENGTH 0
+#define RETRACTION_UNDO_EXTRA_LENGTH 0.03
 #define RETRACTION_UNDO_EXTRA_LONG_LENGTH 0
-#define RETRACTION_UNDO_SPEED 20
+#define RETRACTION_UNDO_SPEED 200
 
 /**
 If you have a lcd display, you can do a filament switch with M600.
@@ -1132,14 +1132,14 @@ for some printers causing an early stall.
 For x and y axis 500 mm/s2 is slow, 1000mm/s2 a moderate value for smooth prints and 3000 mm/s2 is good for quick prints.
  Overridden if EEPROM activated.
 */
-#define MAX_ACCELERATION_UNITS_PER_SQ_SECOND_X 1000
-#define MAX_ACCELERATION_UNITS_PER_SQ_SECOND_Y 1000
-#define MAX_ACCELERATION_UNITS_PER_SQ_SECOND_Z 100
+#define MAX_ACCELERATION_UNITS_PER_SQ_SECOND_X 2000
+#define MAX_ACCELERATION_UNITS_PER_SQ_SECOND_Y 2000
+#define MAX_ACCELERATION_UNITS_PER_SQ_SECOND_Z 800
 
 /** \brief X, Y, Z max acceleration in mm/s^2 for travel moves.  Overridden if EEPROM activated.*/
-#define MAX_TRAVEL_ACCELERATION_UNITS_PER_SQ_SECOND_X 3000
-#define MAX_TRAVEL_ACCELERATION_UNITS_PER_SQ_SECOND_Y 3000
-#define MAX_TRAVEL_ACCELERATION_UNITS_PER_SQ_SECOND_Z 100
+#define MAX_TRAVEL_ACCELERATION_UNITS_PER_SQ_SECOND_X 5000
+#define MAX_TRAVEL_ACCELERATION_UNITS_PER_SQ_SECOND_Y 5000
+#define MAX_TRAVEL_ACCELERATION_UNITS_PER_SQ_SECOND_Z 800
 /** If you print on a moving bed, it can become more shaky the higher and bigger
  your print gets. Therefore it might be helpfull to reduce acceleration with
  increasing print height. You can define here how acceleration should change.
@@ -1185,7 +1185,7 @@ Overridden if EEPROM activated.
 This number of moves can be cached in advance. If you wan't to cache more, increase this. Especially on
 many very short moves the cache may go empty. The minimum value is 5.
 */
-#define PRINTLINE_CACHE_SIZE 42
+#define PRINTLINE_CACHE_SIZE 32
 
 /** \brief Low filled cache size.
 
