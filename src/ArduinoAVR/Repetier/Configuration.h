@@ -487,7 +487,7 @@ M140 command, after a given temperature is reached. */
 #define RETRACT_DURING_HEATUP 2
 
 /** Allow retraction with G10/G11 removing requirement for retraction setting in slicer. Also allows filament change if lcd is configured. */
-#define FEATURE_RETRACTION 1
+#define FEATURE_RETRACTION 0
 /** auto-retract converts pure extrusion moves into retractions. Beware that
  simple extrusion e.g. over Repetier-Host will then not work! */
 #define AUTORETRACT_ENABLED 0
@@ -1127,7 +1127,7 @@ for some printers causing an early stall.
 #define DOUBLE_STEP_DELAY 0 // time in microseconds
 
 /** If the firmware is busy, it will send a busy signal to host signaling that
- everything is fine and it only takes a bit longer to finish. That way the 
+ everything is fine and it only takes a bit longer to finish. That way the
  host can keep timeout short so in case of communication errors the resulting
  blobs are much smaller. Set to 0 to disable it. */
 #define KEEP_ALIVE_INTERVAL 2000
@@ -1137,13 +1137,13 @@ for some printers causing an early stall.
 For x and y axis 500 mm/s2 is slow, 1000mm/s2 a moderate value for smooth prints and 3000 mm/s2 is good for quick prints.
  Overridden if EEPROM activated.
 */
-#define MAX_ACCELERATION_UNITS_PER_SQ_SECOND_X 2000
-#define MAX_ACCELERATION_UNITS_PER_SQ_SECOND_Y 2000
+#define MAX_ACCELERATION_UNITS_PER_SQ_SECOND_X 1400
+#define MAX_ACCELERATION_UNITS_PER_SQ_SECOND_Y 1400
 #define MAX_ACCELERATION_UNITS_PER_SQ_SECOND_Z 800
 
 /** \brief X, Y, Z max acceleration in mm/s^2 for travel moves.  Overridden if EEPROM activated.*/
-#define MAX_TRAVEL_ACCELERATION_UNITS_PER_SQ_SECOND_X 5000
-#define MAX_TRAVEL_ACCELERATION_UNITS_PER_SQ_SECOND_Y 5000
+#define MAX_TRAVEL_ACCELERATION_UNITS_PER_SQ_SECOND_X 1400
+#define MAX_TRAVEL_ACCELERATION_UNITS_PER_SQ_SECOND_Y 1400
 #define MAX_TRAVEL_ACCELERATION_UNITS_PER_SQ_SECOND_Z 800
 /** If you print on a moving bed, it can become more shaky the higher and bigger
  your print gets. Therefore it might be helpfull to reduce acceleration with
