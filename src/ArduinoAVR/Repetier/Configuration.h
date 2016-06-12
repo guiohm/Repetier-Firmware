@@ -1139,12 +1139,12 @@ For x and y axis 500 mm/s2 is slow, 1000mm/s2 a moderate value for smooth prints
 */
 #define MAX_ACCELERATION_UNITS_PER_SQ_SECOND_X 1400
 #define MAX_ACCELERATION_UNITS_PER_SQ_SECOND_Y 1400
-#define MAX_ACCELERATION_UNITS_PER_SQ_SECOND_Z 800
+#define MAX_ACCELERATION_UNITS_PER_SQ_SECOND_Z 100
 
 /** \brief X, Y, Z max acceleration in mm/s^2 for travel moves.  Overridden if EEPROM activated.*/
 #define MAX_TRAVEL_ACCELERATION_UNITS_PER_SQ_SECOND_X 1400
 #define MAX_TRAVEL_ACCELERATION_UNITS_PER_SQ_SECOND_Y 1400
-#define MAX_TRAVEL_ACCELERATION_UNITS_PER_SQ_SECOND_Z 800
+#define MAX_TRAVEL_ACCELERATION_UNITS_PER_SQ_SECOND_Z 100
 /** If you print on a moving bed, it can become more shaky the higher and bigger
  your print gets. Therefore it might be helpfull to reduce acceleration with
  increasing print height. You can define here how acceleration should change.
