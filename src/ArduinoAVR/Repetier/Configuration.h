@@ -218,7 +218,7 @@ Overridden if EEPROM activated.*/
 // for each extruder, fan will stay on until extruder temperature is below this value
 #define EXTRUDER_FAN_COOL_TEMP 50
 // Retraction for sd pause over lcd
-#define RETRACT_ON_PAUSE 2
+#define RETRACT_ON_PAUSE 5
 // These commands get executed after storing position and going to park position.
 #define PAUSE_START_COMMANDS ""
 // These commands get executed before we go to stored position.
@@ -339,11 +339,11 @@ cog. Direct drive extruder need 0. */
 #define EXT0_ADVANCE_BACKLASH_STEPS 300 // almost 1mm
 /** \brief Temperature to retract filament when extruder is heating up. Overridden if EEPROM activated.
 */
-#define EXT0_WAIT_RETRACT_TEMP 		160
+#define EXT0_WAIT_RETRACT_TEMP 		180
 /** \brief Units (mm/inches) to retract filament when extruder is heating up. Overridden if EEPROM activated. Set
 to 0 to disable.
 */
-#define EXT0_WAIT_RETRACT_UNITS 	2
+#define EXT0_WAIT_RETRACT_UNITS 	1
 
 /** You can run any GCODE command on extruder deselect/select. Separate multiple commands with a new line \n.
 That way you can execute some mechanical components needed for extruder selection or retract filament or whatever you need.
@@ -1190,7 +1190,7 @@ Overridden if EEPROM activated.
 This number of moves can be cached in advance. If you wan't to cache more, increase this. Especially on
 many very short moves the cache may go empty. The minimum value is 5.
 */
-#define PRINTLINE_CACHE_SIZE 32
+#define PRINTLINE_CACHE_SIZE 28
 
 /** \brief Low filled cache size.
 
@@ -1260,7 +1260,7 @@ to activate the quadratic term. Only adds lots of computations and storage usage
 Some boards like Gen7 have a power on pin, to enable the ATX power supply. If this is defined,
 the power will be turned on without the need to call M80 if initially started.
 */
-#define ENABLE_POWER_ON_STARTUP 1
+#define ENABLE_POWER_ON_STARTUP 0
 
 /**
 If you use an ATX power supply you need the power pin to work non inverting. For some special
@@ -1538,7 +1538,7 @@ Always hard to say since the other angle is 89° in this case!
 #define FEATURE_SOFTWARE_LEVELING 0
 
 /* Babystepping allows to change z height during print without changing official z height */
-#define FEATURE_BABYSTEPPING 0
+#define FEATURE_BABYSTEPPING 1
 /* If you have a threaded rod, you want a higher multiplicator to see an effect. Limit value to 50 or you get easily overflows.*/
 #define BABYSTEP_MULTIPLICATOR 1
 
@@ -1559,9 +1559,9 @@ Always hard to say since the other angle is 89° in this case!
 #define SD_EXTENDED_DIR 1
 /** The GCODEs in this line get executed, when you stop a SD print befor it was ended.
 Separate commands by \n */
-#define SD_RUN_ON_STOP ""
+#define SD_RUN_ON_STOP "G92 E0\n G1 E-5 F300\n G1 Z0.5 X275 Y150 F5000\n M84 ;motors off"
 /** Disable motors and heaters when print was stopped. */
-#define SD_STOP_HEATER_AND_MOTORS_ON_STOP 1
+#define SD_STOP_HEATER_AND_MOTORS_ON_STOP 0
 
 // If you want support for G2/G3 arc commands set to true, otherwise false.
 #define ARC_SUPPORT 1
@@ -1685,7 +1685,7 @@ info pages with next/previous button/click-encoder */
 #define UI_DISABLE_AUTO_PAGESWITCH 1
 
 /** Time to return to info menu if x milliseconds no key was pressed. Set to 0 to disable it. */
-#define UI_AUTORETURN_TO_MENU_AFTER 30000
+#define UI_AUTORETURN_TO_MENU_AFTER 60000
 
 #define FEATURE_UI_KEYS 0
 
@@ -1740,10 +1740,10 @@ If you have leveling with bed coating or fixed z min you can use this menu to ad
 */
 #define UI_BED_COATING 1
 // Values used for preheat
-#define UI_SET_PRESET_HEATED_BED_TEMP_PLA 60
-#define UI_SET_PRESET_EXTRUDER_TEMP_PLA   180
-#define UI_SET_PRESET_HEATED_BED_TEMP_ABS 110
-#define UI_SET_PRESET_EXTRUDER_TEMP_ABS   240
+#define UI_SET_PRESET_HEATED_BED_TEMP_PLA 72
+#define UI_SET_PRESET_EXTRUDER_TEMP_PLA   70
+#define UI_SET_PRESET_HEATED_BED_TEMP_ABS 102
+#define UI_SET_PRESET_EXTRUDER_TEMP_ABS   110
 // Extreme values
 #define UI_SET_MIN_HEATED_BED_TEMP  20
 #define UI_SET_MAX_HEATED_BED_TEMP 120
