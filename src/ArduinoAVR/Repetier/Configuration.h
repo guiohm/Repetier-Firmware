@@ -1182,7 +1182,7 @@ Corner can be printed with full speed of 50 mm/s
 
 Overridden if EEPROM activated.
 */
-#define MAX_JERK 21.0 //38.0 20.0
+#define MAX_JERK 30.0 //38.0
 #define MAX_ZJERK 0.6
 
 /** \brief Number of moves we can cache in advance.
