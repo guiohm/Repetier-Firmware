@@ -1647,8 +1647,8 @@ void Printer::homeAxis(bool xaxis,bool yaxis,bool zaxis) // home non-delta print
     if(zaxis) {
 #if HOMING_ORDER == HOME_ORDER_ZXYTZ
         homeZAxis();
-        Printer::moveToReal(IGNORE_COORDINATE,IGNORE_COORDINATE,ZHOME_HEAT_HEIGHT,IGNORE_COORDINATE,homingFeedrate[Z_AXIS]);
 #endif
+        Printer::moveToReal(IGNORE_COORDINATE,IGNORE_COORDINATE,ZHOME_HEAT_HEIGHT,IGNORE_COORDINATE,maxFeedrate[Z_AXIS]);
         Commands::waitUntilEndOfAllMoves();
 #if ZHOME_HEAT_ALL
         for(int i = 0; i < NUM_EXTRUDER; i++) {
@@ -1693,7 +1693,7 @@ void Printer::homeAxis(bool xaxis,bool yaxis,bool zaxis) // home non-delta print
     }
     if(zaxis) {
 #if ZHOME_X_POS != IGNORE_COORDINATE || ZHOME_Y_POS != IGNORE_COORDINATE
-        moveToReal(ZHOME_X_POS,ZHOME_Y_POS,IGNORE_COORDINATE,IGNORE_COORDINATE,homingFeedrate[Y_AXIS]);
+        moveToReal(ZHOME_X_POS,ZHOME_Y_POS,IGNORE_COORDINATE,IGNORE_COORDINATE,maxFeedrate[Y_AXIS]);
         Commands::waitUntilEndOfAllMoves();
 #endif
         homeZAxis();
@@ -1706,14 +1706,14 @@ void Printer::homeAxis(bool xaxis,bool yaxis,bool zaxis) // home non-delta print
 #endif
         if(Z_HOME_DIR < 0) startZ = Printer::zMin;
         else startZ = Printer::zMin + Printer::zLength - zBedOffset;
-		moveToReal(IGNORE_COORDINATE, IGNORE_COORDINATE, ZHOME_HEAT_HEIGHT, IGNORE_COORDINATE, homingFeedrate[X_AXIS]);
+		moveToReal(IGNORE_COORDINATE, IGNORE_COORDINATE, ZHOME_HEAT_HEIGHT, IGNORE_COORDINATE, maxFeedrate[Z_AXIS]);
 #if ZHOME_HEAT_ALL
         for(int i = 0; i < NUM_EXTRUDER; i++)
             Extruder::setTemperatureForExtruder(actTemp[i],i,false,false);
         for(int i = 0; i < NUM_EXTRUDER; i++)
-			Extruder::setTemperatureForExtruder(actTemp[i],i,false, actTemp[i] > MAX_ROOM_TEMPERATURE);
+			Extruder::setTemperatureForExtruder(actTemp[i],i,false, false);
 #else
-        Extruder::setTemperatureForExtruder(actTemp[Extruder::current->id], Extruder::current->id, false, actTemp[Extruder::current->id] > MAX_ROOM_TEMPERATURE);
+        Extruder::setTemperatureForExtruder(actTemp[Extruder::current->id], Extruder::current->id, false, false);
 #endif
     }
 }
@@ -1733,6 +1733,8 @@ void Printer::homeAxis(bool xaxis,bool yaxis,bool zaxis) // home non-delta print
     {
         if(Z_HOME_DIR < 0) startZ = Printer::zMin;
         else startZ = Printer::zMin + Printer::zLength - Printer::zBedOffset;
+        startX = 77;
+        startY = -28;
     }
 #endif
     updateCurrentPosition(true);
