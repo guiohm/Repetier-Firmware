@@ -885,7 +885,7 @@ on this endstop.
 // If during homing the endstop is reached, ho many mm should the printer move back for the second try
 #define ENDSTOP_X_BACK_MOVE 10
 #define ENDSTOP_Y_BACK_MOVE 5
-#define ENDSTOP_Z_BACK_MOVE 2
+#define ENDSTOP_Z_BACK_MOVE 1
 
 // For higher precision you can reduce the speed for the second test on the endstop
 // during homing operation. The homing speed is divided by the value. 1 = same speed, 2 = half speed
@@ -895,9 +895,9 @@ on this endstop.
 
 // When you have several endstops in one circuit you need to disable it after homing by moving a
 // small amount back. This is also the case with H-belt systems.
-#define ENDSTOP_X_BACK_ON_HOME 37
+#define ENDSTOP_X_BACK_ON_HOME 27
 #define ENDSTOP_Y_BACK_ON_HOME 1
-#define ENDSTOP_Z_BACK_ON_HOME 0
+#define ENDSTOP_Z_BACK_ON_HOME 3.6
 
 // You can disable endstop checking for print moves. This is needed, if you get sometimes
 // false signals from your endstops. If your endstops don't give false signals, you
@@ -908,12 +908,12 @@ on this endstop.
 // For delta robot Z_MAX_LENGTH is the maximum travel of the towers and should be set to the distance between the hotend
 // and the platform when the printer is at its home position.
 // If EEPROM is enabled these values will be overridden with the values in the EEPROM
-#define X_MAX_LENGTH 275
-#define Y_MAX_LENGTH 218
+#define X_MAX_LENGTH 307 // 285 + 22
+#define Y_MAX_LENGTH 223 // 195 + 28
 #define Z_MAX_LENGTH 260
 // Coordinates for the minimum axis. Can also be negative if you want to have the bed start at 0 and the printer can go to the left side
 // of the bed. Maximum coordinate is given by adding the above X_MAX_LENGTH values.
-#define X_MIN_POS 0
+#define X_MIN_POS -22
 #define Y_MIN_POS -28
 #define Z_MIN_POS 0
 
@@ -1064,7 +1064,7 @@ Mega. Used only for nonlinear systems like delta or tuga. */
 /** Home position speed in mm/s. Overridden if EEPROM activated. */
 #define HOMING_FEEDRATE_X 40
 #define HOMING_FEEDRATE_Y 40
-#define HOMING_FEEDRATE_Z 7
+#define HOMING_FEEDRATE_Z 1
 
 /** Set order of axis homing. Use HOME_ORDER_XYZ and replace XYZ with your order.
  * If you measure Z with your extruder tip you need a hot extruder to get right measurement. In this
@@ -1072,19 +1072,19 @@ Mega. Used only for nonlinear systems like delta or tuga. */
  * first a z home to get some reference, then raise to ZHOME_HEAT_HEIGHT do xy homing and then after
  * heating to minimum ZHOME_MIN_TEMPERATURE will z home again for correct height.
  * */
-#define HOMING_ORDER HOME_ORDER_YXZ
+#define HOMING_ORDER HOME_ORDER_XYTZ // HOME_ORDER_YXZ
 // Used for homing order HOME_ORDER_ZXYTZ
-#define ZHOME_MIN_TEMPERATURE 0
+#define ZHOME_MIN_TEMPERATURE 200
 // needs to heat all extruders (1) or only current extruder (0)
-#define ZHOME_HEAT_ALL 1
+#define ZHOME_HEAT_ALL 0
 // Z-height for heating extruder during homing
-#define ZHOME_HEAT_HEIGHT 20
+#define ZHOME_HEAT_HEIGHT 12
 // If your bed might bend while probing, because your sensor is the extruder tip
 // you can define a predefined x,y position so beding is always the same and
 // can be compensated. Set coordinate to 999999 to ignore positions and just
 // use the position you are at.
-#define ZHOME_X_POS IGNORE_COORDINATE
-#define ZHOME_Y_POS IGNORE_COORDINATE
+#define ZHOME_X_POS -13 // IGNORE_COORDINATE
+#define ZHOME_Y_POS 155
 
 /* If you have a backlash in both z-directions, you can use this. For most printer, the bed will be pushed down by it's
 own weight, so this is nearly never needed. */
@@ -1198,7 +1198,7 @@ If the cache contains less then MOVE_CACHE_LOW segments, the time per segment is
 If a move would be shorter, the feedrate will be reduced. This should prevent buffer underflows. Set this to 0 if you
 don't care about empty buffers during print.
 */
-#define MOVE_CACHE_LOW 18
+#define MOVE_CACHE_LOW 12
 /** \brief Cycles per move, if move cache is low.
 
 This value must be high enough, that the buffer has time to fill up. The problem only occurs at the beginning of a print or
@@ -1540,7 +1540,7 @@ Always hard to say since the other angle is 89° in this case!
 /* Babystepping allows to change z height during print without changing official z height */
 #define FEATURE_BABYSTEPPING 1
 /* If you have a threaded rod, you want a higher multiplicator to see an effect. Limit value to 50 or you get easily overflows.*/
-#define BABYSTEP_MULTIPLICATOR 1
+#define BABYSTEP_MULTIPLICATOR 3
 
 /* Define a pin to tuen light on/off */
 #define CASE_LIGHTS_PIN -1
@@ -1740,10 +1740,10 @@ If you have leveling with bed coating or fixed z min you can use this menu to ad
 */
 #define UI_BED_COATING 1
 // Values used for preheat
-#define UI_SET_PRESET_HEATED_BED_TEMP_PLA 72
-#define UI_SET_PRESET_EXTRUDER_TEMP_PLA   70
+#define UI_SET_PRESET_HEATED_BED_TEMP_PLA 64
+#define UI_SET_PRESET_EXTRUDER_TEMP_PLA   120
 #define UI_SET_PRESET_HEATED_BED_TEMP_ABS 102
-#define UI_SET_PRESET_EXTRUDER_TEMP_ABS   110
+#define UI_SET_PRESET_EXTRUDER_TEMP_ABS   140
 // Extreme values
 #define UI_SET_MIN_HEATED_BED_TEMP  20
 #define UI_SET_MAX_HEATED_BED_TEMP 120
