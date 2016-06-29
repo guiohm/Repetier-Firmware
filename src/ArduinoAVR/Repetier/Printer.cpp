@@ -1574,7 +1574,7 @@ void Printer::homeZAxis() // Cartesian homing
 #if NONLINEAR_SYSTEM
 		transformCartesianStepsToDeltaSteps(currentPositionSteps, currentNonlinearPositionSteps);
 #endif
-        PrintLine::moveRelativeDistanceInSteps(0,0,axisStepsPerMM[Z_AXIS] * -ENDSTOP_Z_BACK_MOVE * Z_HOME_DIR,0,homingFeedrate[Z_AXIS] / ENDSTOP_Z_RETEST_REDUCTION_FACTOR,true,false);
+        PrintLine::moveRelativeDistanceInSteps(0,0,axisStepsPerMM[Z_AXIS] * -ENDSTOP_Z_BACK_MOVE * Z_HOME_DIR,0,homingFeedrate[Z_AXIS],true,false);
 #if defined(ZHOME_WAIT_UNSWING) && ZHOME_WAIT_UNSWING > 0
         HAL::delayMilliseconds(ZHOME_WAIT_UNSWING);
 #endif
@@ -1596,7 +1596,7 @@ void Printer::homeZAxis() // Cartesian homing
 #else
 		currentPositionSteps[Z_AXIS] -= zBedOffset * axisStepsPerMM[Z_AXIS]; // Correct bed coating
 #endif
-        PrintLine::moveRelativeDistanceInSteps(0,0,zCorrection,0,homingFeedrate[Z_AXIS],true,false);
+        PrintLine::moveRelativeDistanceInSteps(0,0,zCorrection,0,maxFeedrate[Z_AXIS],true,false);
         currentPositionSteps[Z_AXIS] = ((Z_HOME_DIR == -1) ? zMinSteps : zMaxSteps - Printer::zBedOffset * axisStepsPerMM[Z_AXIS]);
 #if NUM_EXTRUDER > 0
         currentPositionSteps[Z_AXIS] -= Extruder::current->zOffset;
