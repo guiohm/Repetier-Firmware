@@ -219,7 +219,7 @@ void Endstops::update() {
 #else
     if(Z_PROBE_ON_HIGH ? READ(Z_PROBE_PIN) : !READ(Z_PROBE_PIN))
         newRead |= ENDSTOP_Z_PROBE_ID;
-#endif		
+#endif
 #endif
     lastRead &= newRead;
 #ifdef EXTENDED_ENDSTOPS
@@ -327,7 +327,7 @@ void Printer::toggleEcho() {
 }
 void Printer::toggleInfo() {
 	setDebugLevel(debugLevel ^ 2);
-}	
+}
 void Printer::toggleErrors() {
 	setDebugLevel(debugLevel ^ 4);
 }
@@ -335,7 +335,7 @@ void Printer::toggleDryRun() {
 	setDebugLevel(debugLevel ^ 8);
 }
 void Printer::toggleCommunication() {
-	setDebugLevel(debugLevel ^ 16);	
+	setDebugLevel(debugLevel ^ 16);
 }
 void Printer::toggleNoMoves() {
 	setDebugLevel(debugLevel ^ 32);
@@ -343,7 +343,7 @@ void Printer::toggleNoMoves() {
 void Printer::toggleEndStop() {
   setDebugLevel(debugLevel ^ 64);
 }
-	
+
 bool Printer::isPositionAllowed(float x,float y,float z)
 {
     if(isNoDestinationCheck()) return true;
@@ -660,11 +660,11 @@ void Printer::updateCurrentPosition(bool copyLastCmd)
 {
     currentPosition[X_AXIS] = static_cast<float>(currentPositionSteps[X_AXIS]) * invAxisStepsPerMM[X_AXIS];
     currentPosition[Y_AXIS] = static_cast<float>(currentPositionSteps[Y_AXIS]) * invAxisStepsPerMM[Y_AXIS];
-#if NONLINEAR_SYSTEM	
+#if NONLINEAR_SYSTEM
     currentPosition[Z_AXIS] = static_cast<float>(currentPositionSteps[Z_AXIS]) * invAxisStepsPerMM[Z_AXIS];
 #else
     currentPosition[Z_AXIS] = static_cast<float>(currentPositionSteps[Z_AXIS] - zCorrectionStepsIncluded) * invAxisStepsPerMM[Z_AXIS];
-#endif	
+#endif
    transformFromPrinter(currentPosition[X_AXIS], currentPosition[Y_AXIS], currentPosition[Z_AXIS],
                         currentPosition[X_AXIS], currentPosition[Y_AXIS], currentPosition[Z_AXIS]);
     currentPosition[X_AXIS] -= Printer::offsetX;
@@ -1424,7 +1424,7 @@ void Printer::homeYAxis()
 }
 #else // Cartesian printer
 void Printer::homeXAxis()
-{	
+{
     long steps;
     UI_STATUS_UPD_F(Com::translatedF(UI_TEXT_HOME_X_ID));
 	Commands::waitUntilEndOfAllMoves();
@@ -1437,7 +1437,7 @@ void Printer::homeXAxis()
     PrintLine::moveRelativeDistanceInSteps(-2 * steps, 0, 0, 0, homingFeedrate[X_AXIS], true, true);
     setHoming(false);
 	PrintLine::moveRelativeDistanceInSteps(axisStepsPerMM[X_AXIS] * ENDSTOP_X_BACK_MOVE,0,0,0,homingFeedrate[X_AXIS] / ENDSTOP_X_RETEST_REDUCTION_FACTOR, true, false);
-    setHoming(true);	
+    setHoming(true);
     PrintLine::moveRelativeDistanceInSteps(-axisStepsPerMM[X_AXIS] * 2 * ENDSTOP_X_BACK_MOVE,0,0,0,homingFeedrate[X_AXIS] / ENDSTOP_X_RETEST_REDUCTION_FACTOR, true, true);
     setHoming(false);
 #if defined(ENDSTOP_X_BACK_ON_HOME)
@@ -1460,7 +1460,7 @@ void Printer::homeXAxis()
 	// Now position current extrude on x = 0
 	PrintLine::moveRelativeDistanceInSteps(-Extruder::current->xOffset, 0, 0, 0, homingFeedrate[X_AXIS], true, true);
 	currentPositionSteps[X_AXIS] = xMinSteps;
-#else	
+#else
     if ((MIN_HARDWARE_ENDSTOP_X && X_MIN_PIN > -1 && X_HOME_DIR == -1) || (MAX_HARDWARE_ENDSTOP_X && X_MAX_PIN > -1 && X_HOME_DIR == 1))
     {
 		coordinateOffset[X_AXIS] = 0;
@@ -1476,9 +1476,9 @@ void Printer::homeXAxis()
 #endif // NUM_EXTRUDER > 1
         steps = (Printer::xMaxSteps - Printer::xMinSteps) * X_HOME_DIR;
         currentPositionSteps[X_AXIS] = -steps;
-#if NONLINEAR_SYSTEM		
+#if NONLINEAR_SYSTEM
 		transformCartesianStepsToDeltaSteps(currentPositionSteps, currentNonlinearPositionSteps);
-#endif			
+#endif
         PrintLine::moveRelativeDistanceInSteps(2 * steps, 0, 0, 0, homingFeedrate[X_AXIS], true, true);
         currentPositionSteps[X_AXIS] = (X_HOME_DIR == -1) ? xMinSteps - offX : xMaxSteps + offX;
 #if NONLINEAR_SYSTEM
@@ -1503,7 +1503,7 @@ void Printer::homeXAxis()
 #endif
 #endif
     }
-#endif	
+#endif
 }
 
 void Printer::homeYAxis()
@@ -1584,7 +1584,7 @@ void Printer::homeZAxis() // Cartesian homing
 #if Z_HOME_DIR < 0 && MIN_HARDWARE_ENDSTOP_Z && FEATURE_Z_PROBE && Z_PROBE_PIN == Z_MIN_PIN
 		// Fix error from z probe testing
 		zCorrection -= axisStepsPerMM[Z_AXIS]*EEPROM::zProbeHeight();
-#endif		
+#endif
 #if defined(ENDSTOP_Z_BACK_ON_HOME)
 		// If we want to go up a bit more for some reason
         if(ENDSTOP_Z_BACK_ON_HOME > 0)
@@ -1594,7 +1594,7 @@ void Printer::homeZAxis() // Cartesian homing
 		// Fix bed coating
 		zCorrection += axisStepsPerMM[Z_AXIS] * Printer::zBedOffset;
 #else
-		currentPositionSteps[Z_AXIS] -= zBedOffset * axisStepsPerMM[Z_AXIS]; // Correct bed coating	
+		currentPositionSteps[Z_AXIS] -= zBedOffset * axisStepsPerMM[Z_AXIS]; // Correct bed coating
 #endif
         PrintLine::moveRelativeDistanceInSteps(0,0,zCorrection,0,homingFeedrate[Z_AXIS],true,false);
         currentPositionSteps[Z_AXIS] = ((Z_HOME_DIR == -1) ? zMinSteps : zMaxSteps - Printer::zBedOffset * axisStepsPerMM[Z_AXIS]);
@@ -1645,10 +1645,10 @@ void Printer::homeAxis(bool xaxis,bool yaxis,bool zaxis) // home non-delta print
     for(int i = 0;i < NUM_EXTRUDER; i++)
         actTemp[i] = extruder[i].tempControl.targetTemperatureC;
     if(zaxis) {
-#if HOMING_ORDER == HOME_ORDER_ZXYTZ		
+#if HOMING_ORDER == HOME_ORDER_ZXYTZ
         homeZAxis();
         Printer::moveToReal(IGNORE_COORDINATE,IGNORE_COORDINATE,ZHOME_HEAT_HEIGHT,IGNORE_COORDINATE,homingFeedrate[Z_AXIS]);
-#endif		
+#endif
         Commands::waitUntilEndOfAllMoves();
 #if ZHOME_HEAT_ALL
         for(int i = 0; i < NUM_EXTRUDER; i++) {
@@ -1703,7 +1703,7 @@ void Printer::homeAxis(bool xaxis,bool yaxis,bool zaxis) // home non-delta print
 			Printer::zCorrectionStepsIncluded = Printer::distortion.correct(Printer::currentPositionSteps[X_AXIS],currentPositionSteps[Y_AXIS],currentPositionSteps[Z_AXIS]);
 			currentPositionSteps[Z_AXIS] += Printer::zCorrectionStepsIncluded;
 		}
-#endif		
+#endif
         if(Z_HOME_DIR < 0) startZ = Printer::zMin;
         else startZ = Printer::zMin + Printer::zLength - zBedOffset;
 		moveToReal(IGNORE_COORDINATE, IGNORE_COORDINATE, ZHOME_HEAT_HEIGHT, IGNORE_COORDINATE, homingFeedrate[X_AXIS]);
@@ -1875,11 +1875,11 @@ void Printer::showConfiguration() {
     Com::config(PSTR("HeatedBed:"),HAVE_HEATED_BED);
     Com::config(PSTR("SDCard:"),SDSUPPORT);
     Com::config(PSTR("Fan:"),FAN_PIN > -1 && FEATURE_FAN_CONTROL);
-#if FEATURE_FAN2_CONTROL && defined(FAN2_PIN) && FAN2_PIN > -1	
+#if FEATURE_FAN2_CONTROL && defined(FAN2_PIN) && FAN2_PIN > -1
     Com::config(PSTR("Fan2:1"));
 #else
     Com::config(PSTR("Fan2:0"));
-#endif	
+#endif
     Com::config(PSTR("LCD:"),FEATURE_CONTROLLER != NO_CONTROLLER);
     Com::config(PSTR("SoftwarePowerSwitch:"),PS_ON_PIN > -1);
     Com::config(PSTR("XHomeDir:"),X_HOME_DIR);
@@ -1978,7 +1978,7 @@ void Distortion::updateDerived()
 	yCorrectionSteps = (DISTORTION_YMAX - DISTORTION_YMIN) * Printer::axisStepsPerMM[Y_AXIS] / (DISTORTION_CORRECTION_POINTS - 1);
 	yOffsetSteps = DISTORTION_YMIN * Printer::axisStepsPerMM[Y_AXIS];
 
-#endif	
+#endif
     zStart = DISTORTION_START_DEGRADE * Printer::axisStepsPerMM[Z_AXIS];
     zEnd = DISTORTION_END_HEIGHT * Printer::axisStepsPerMM[Z_AXIS];
 }
@@ -2002,7 +2002,7 @@ void Distortion::disable(bool permanent)
 #endif
 #if DRIVE_SYSTEM != DELTA
 	Printer::zCorrectionStepsIncluded = 0;
-#endif	
+#endif
 	Printer::updateCurrentPosition(false);
     Com::printFLN(Com::tZCorrectionDisabled);
 }
@@ -2081,7 +2081,7 @@ bool Distortion::measure(void)
 	int32_t zCorrection = 0;
 #if Z_HOME_DIR < 0
 	zCorrection += Printer::zBedOffset * Printer::axisStepsPerMM[Z_AXIS];
-#endif		
+#endif
 #if Z_HOME_DIR < 0 && Z_PROBE_Z_OFFSET_MODE == 1
 	zCorrection += Printer::zBedOffset * Printer::axisStepsPerMM[Z_AXIS];
 #endif
@@ -2098,7 +2098,7 @@ bool Distortion::measure(void)
 #else
 			float mtx = Printer::invAxisStepsPerMM[X_AXIS] * (ix * xCorrectionSteps + xOffsetSteps);
 			float mty = Printer::invAxisStepsPerMM[Y_AXIS] * (iy * yCorrectionSteps + yOffsetSteps);
-#endif			
+#endif
             //Com::printF(PSTR("mx "),mtx);
             //Com::printF(PSTR("my "),mty);
             //Com::printF(PSTR("ix "),(int)ix);
@@ -2152,7 +2152,7 @@ int32_t Distortion::correct(int32_t x, int32_t y, int32_t z) const
     if(false && z == 0) {
   Com::printF(PSTR("correcting ("), x); Com::printF(PSTR(","), y);
     }
-#if DRIVE_SYSTEM == DELTA	
+#if DRIVE_SYSTEM == DELTA
     x += radiusCorrectionSteps;
     y += radiusCorrectionSteps;
     int32_t fxFloor = (x - (x < 0 ? step - 1 : 0)) / step; // special case floor for negative integers!
@@ -2162,7 +2162,7 @@ int32_t Distortion::correct(int32_t x, int32_t y, int32_t z) const
     y -= yOffsetSteps;
     int32_t fxFloor = (x - (x < 0 ? xCorrectionSteps - 1 : 0)) / xCorrectionSteps; // special case floor for negative integers!
     int32_t fyFloor = (y - (y < 0 ? yCorrectionSteps -1 : 0)) / yCorrectionSteps;
-#endif	
+#endif
 // indexes to the matrix
     if (fxFloor < 0)
         fxFloor = 0;
@@ -2230,7 +2230,7 @@ void Distortion::set(float x,float y,float z) {
 #else
 	int ix = (x * Printer::axisStepsPerMM[X_AXIS] - xOffsetSteps + xCorrectionSteps / 2) / xCorrectionSteps;
 	int iy = (y * Printer::axisStepsPerMM[Y_AXIS] - yOffsetSteps + yCorrectionSteps / 2) / yCorrectionSteps;
-#endif	
+#endif
 	if(ix < 0) ix = 0;
 	if(iy < 0) iy = 0;
 	if(ix >= DISTORTION_CORRECTION_POINTS-1) ix = DISTORTION_CORRECTION_POINTS-1;
@@ -2248,7 +2248,7 @@ void Distortion::showMatrix() {
 #else
 			float x = (xOffsetSteps + ix * xCorrectionSteps) * Printer::invAxisStepsPerMM[X_AXIS];
 			float y = (yOffsetSteps + iy * yCorrectionSteps) * Printer::invAxisStepsPerMM[Y_AXIS];
-#endif			
+#endif
 			int32_t idx = matrixIndex(ix, iy);
 			float z = getMatrix(idx) * Printer::invAxisStepsPerMM[Z_AXIS];
 			Com::printF(PSTR("G33 X"),x,2);
@@ -2295,9 +2295,9 @@ void Printer::showJSONStatus(int type) {
     Com::printF(PSTR(",\"params\": {\"atxPower\":"));
     Com::print(isPowerOn()?'1':'0');
     Com::printF(PSTR(",\"fanPercent\":["));
-#if FEATURE_FAN_CONTROL	
+#if FEATURE_FAN_CONTROL
     Com::print(getFanSpeed() / 2.55f);
-#endif	
+#endif
 #if FEATURE_FAN2_CONTROL
     Com::printF(Com::tComma,getFan2Speed() / 2.55f);
 #endif
