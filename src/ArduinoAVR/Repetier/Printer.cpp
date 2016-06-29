@@ -1743,7 +1743,7 @@ void Printer::homeAxis(bool xaxis,bool yaxis,bool zaxis) // home non-delta print
 	if(zaxis)
 		startZ = Z_UP_AFTER_HOME;
 #endif
-    moveToReal(startX, startY, startZ, IGNORE_COORDINATE, homingFeedrate[X_AXIS]);
+    moveToReal(startX, startY, startZ, IGNORE_COORDINATE, maxFeedrate[X_AXIS]);
 	updateCurrentPosition(true);
     UI_CLEAR_STATUS
     Commands::printCurrentPosition(PSTR("homeAxis "));
