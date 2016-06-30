@@ -897,7 +897,7 @@ on this endstop.
 // small amount back. This is also the case with H-belt systems.
 #define ENDSTOP_X_BACK_ON_HOME 27
 #define ENDSTOP_Y_BACK_ON_HOME 1
-#define ENDSTOP_Z_BACK_ON_HOME 3.6
+#define ENDSTOP_Z_BACK_ON_HOME 4.1
 
 // You can disable endstop checking for print moves. This is needed, if you get sometimes
 // false signals from your endstops. If your endstops don't give false signals, you
@@ -1078,7 +1078,7 @@ Mega. Used only for nonlinear systems like delta or tuga. */
 // needs to heat all extruders (1) or only current extruder (0)
 #define ZHOME_HEAT_ALL 0
 // Z-height for heating extruder during homing
-#define ZHOME_HEAT_HEIGHT 12
+#define ZHOME_HEAT_HEIGHT 4
 // If your bed might bend while probing, because your sensor is the extruder tip
 // you can define a predefined x,y position so beding is always the same and
 // can be compensated. Set coordinate to 999999 to ignore positions and just
@@ -1271,7 +1271,7 @@ boards you might need to make it inverting.
  0 = Disable heaters/motors, wait forever until someone presses reset.
  1 = restart by resetting the AVR controller. The USB connection will not reset if managed by a different chip!
 */
-#define KILL_METHOD 1
+#define KILL_METHOD 0
 
 /** Appends the line number after every ok send, to acknowledge the received command. Uncomment for plain ok ACK if your host has problems with this */
 #define ACK_WITH_LINENUMBER 1
@@ -1387,31 +1387,31 @@ to recalibrate z.
 */
 #define Z_PROBE_Z_OFFSET_MODE 0
 
-#define FEATURE_Z_PROBE 0
-#define Z_PROBE_PIN 63
+#define FEATURE_Z_PROBE 1
+#define Z_PROBE_PIN Z_MIN_PIN // 63
 #define Z_PROBE_PULLUP 1
 #define Z_PROBE_ON_HIGH 1
 #define Z_PROBE_X_OFFSET 0
 #define Z_PROBE_Y_OFFSET 0
-#define Z_PROBE_BED_DISTANCE 5.0 // Higher than max bed level distance error in mm
+#define Z_PROBE_BED_DISTANCE 1.0 // Higher than max bed level distance error in mm
 
 // Waits for a signal to start. Valid signals are probe hit and ok button.
 // This is needful if you have the probe trigger by hand.
 #define Z_PROBE_WAIT_BEFORE_TEST 0
 /** Speed of z-axis in mm/s when probing */
-#define Z_PROBE_SPEED 2
+#define Z_PROBE_SPEED 1
 #define Z_PROBE_XY_SPEED 150
-#define Z_PROBE_SWITCHING_DISTANCE 1.5 // Distance to safely switch off probe after it was activated
+#define Z_PROBE_SWITCHING_DISTANCE 0.1 // Distance to safely switch off probe after it was activated
 #define Z_PROBE_REPETITIONS 5 // Repetitions for probing at one point.
 /** Distance between nozzle and bed when probe triggers. */
-#define Z_PROBE_HEIGHT 39.91
+#define Z_PROBE_HEIGHT -4.1
 /** These scripts are run before resp. after the z-probe is done. Add here code to activate/deactivate probe if needed. */
 #define Z_PROBE_START_SCRIPT ""
 #define Z_PROBE_FINISHED_SCRIPT ""
 /** Set 1 if you need a hot extruder for good probe results. Normally only required if nozzle is probe. */
-#define Z_PROBE_REQUIRES_HEATING 0
+#define Z_PROBE_REQUIRES_HEATING 1
 /** Minimum extruder temperature for probing. If it is lower, it will be increased to that value. */
-#define Z_PROBE_MIN_TEMPERATURE 150
+#define Z_PROBE_MIN_TEMPERATURE 190
 
 /*
 Define how we measure the bed rotation.
@@ -1540,7 +1540,7 @@ Always hard to say since the other angle is 89° in this case!
 /* Babystepping allows to change z height during print without changing official z height */
 #define FEATURE_BABYSTEPPING 1
 /* If you have a threaded rod, you want a higher multiplicator to see an effect. Limit value to 50 or you get easily overflows.*/
-#define BABYSTEP_MULTIPLICATOR 3
+#define BABYSTEP_MULTIPLICATOR 4
 
 /* Define a pin to tuen light on/off */
 #define CASE_LIGHTS_PIN -1
@@ -1559,7 +1559,7 @@ Always hard to say since the other angle is 89° in this case!
 #define SD_EXTENDED_DIR 1
 /** The GCODEs in this line get executed, when you stop a SD print befor it was ended.
 Separate commands by \n */
-#define SD_RUN_ON_STOP "G92 E0\n G1 E-5 F300\n G1 Z0.5 X275 Y150 F5000\n M84 ;motors off"
+#define SD_RUN_ON_STOP "G92 E0 Z0\n G1 E-5 F300\n G1 Z0.5 X-20 Y41 F5000\n M84 ;motors off"
 /** Disable motors and heaters when print was stopped. */
 #define SD_STOP_HEATER_AND_MOTORS_ON_STOP 0
 
