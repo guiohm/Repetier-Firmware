@@ -2252,6 +2252,7 @@ void Commands::processMCode(GCode *com) {
             break;
 #endif
 #ifdef DEBUG_REAL_JERK
+            case 535:  // M535
             Com::printFLN(PSTR("Max. jerk measured:"), Printer::maxRealJerk);
             if(com->hasS())
                 Printer::maxRealJerk = 0;
