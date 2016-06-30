@@ -1646,7 +1646,10 @@ The following settings override uiconfig.h!
 /**
 Select the languages to use. On first startup user can select
 the language from a menu with activated languages. In Configuration->Language
-the language can be switched any time. */
+the language can be switched any time.
+On 8 bit processors do not active all or you run out of text memory (64kb)
+and strange errors occur. 8-9 languages normally work.
+*/
 #define LANGUAGE_EN_ACTIVE 1 // English
 #define LANGUAGE_DE_ACTIVE 0 // German
 #define LANGUAGE_NL_ACTIVE 0 // Dutch
