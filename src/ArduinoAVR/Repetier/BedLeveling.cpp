@@ -528,9 +528,12 @@ float Printer::runZProbe(bool first,bool last,uint8_t repeat,bool runStartScript
 #endif
         currentPositionSteps[Z_AXIS] += stepsRemainingAtZHit; // now current position is correct
         sum += lastCorrection - currentPositionSteps[Z_AXIS];
+        Com::printFLN(PSTR("Steps:"), probeDepth-stepsRemainingAtZHit);
+        Com::printFLN(PSTR("  which is in mm:"), (probeDepth-stepsRemainingAtZHit)/axisStepsPerMM[Z_AXIS]);
+        Com::printFLN(PSTR("  which is in mm:"), (lastCorrection-(probeDepth-stepsRemainingAtZHit))/axisStepsPerMM[Z_AXIS]);
         if(r + 1 < repeat) {
             // go only shortest possible move up for repetitions
-            PrintLine::moveRelativeDistanceInSteps(0, 0, shortMove, 0, EEPROM::zProbeSpeed(), true, true);
+            PrintLine::moveRelativeDistanceInSteps(0, 0, shortMove, 0, rinter::maxFeedrate[Z_AXIS], true, true);
             if(Endstops::zProbe()) {
                 Com::printErrorFLN(PSTR("z-probe did not untrigger on repetitive measurement - maybe you need to increase distance!"));
                 return ILLEGAL_Z_PROBE;
