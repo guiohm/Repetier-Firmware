@@ -91,7 +91,7 @@ By now the leveling process is finished. All errors that remain are measuring er
 the bed it self. For deltas you can enable distortion correction to follow the bumps.
 
 There are 2 ways to consider a changing bed coating, which are defined by Z_PROBE_Z_OFFSET_MODE.
-Z_PROBE_Z_OFFSET_MODE = 0 means we measure the surface of the bed below any coating. This is e.g. 
+Z_PROBE_Z_OFFSET_MODE = 0 means we measure the surface of the bed below any coating. This is e.g.
 the case with inductive sensors where we put BuildTak on top. In that case we can set Z_PROBE_Z_OFFSET
 to the thickness of BuildTak to compensate. If we later change the coating, we only change Z_PROBE_Z_OFFSET
 to new coating thickness.
@@ -100,7 +100,7 @@ Z_PROBE_Z_OFFSET_MODE = 1 means we measure the surface of the coating, e.g. beca
 In that case we add Z_PROBE_Z_OFFSET for the measured height to compensate for correct distance to bed surface.
 
 In homing to max we reduce z length by Z_PROBE_Z_OFFSET to get a correct height.
-In homing to z min we assume z endstop is bed level so we move up Z_PROBE_Z_OFFSET after endstop is hit. This 
+In homing to z min we assume z endstop is bed level so we move up Z_PROBE_Z_OFFSET after endstop is hit. This
 requires the extruder to bend the coating thickness without harm!
 */
 
@@ -259,7 +259,7 @@ void correctAutolevel(GCode *code,Plane &plane) {
 	if(h2 > LIMIT_MOTORIZED_CORRECTION) h2 = LIMIT_MOTORIZED_CORRECTION;
 	if(h3 < -LIMIT_MOTORIZED_CORRECTION) h3 = -LIMIT_MOTORIZED_CORRECTION;
 	if(h3 > LIMIT_MOTORIZED_CORRECTION) h3 = LIMIT_MOTORIZED_CORRECTION;
-#endif	
+#endif
     MotorDriverInterface *motor2 = getMotorDriver(0);
     MotorDriverInterface *motor3 = getMotorDriver(1);
     motor2->setCurrentAs(0);
@@ -438,7 +438,7 @@ void Printer::startProbing(bool runScript) {
     PrintLine::moveRelativeDistanceInSteps((Printer::offsetX - oldOffX + xExtra) * Printer::axisStepsPerMM[X_AXIS],
                                            (Printer::offsetY - oldOffY + yExtra) * Printer::axisStepsPerMM[Y_AXIS],
                                            0, 0, EEPROM::zProbeXYSpeed(), true, ALWAYS_CHECK_ENDSTOPS);
-	updateCurrentPosition(false);										  
+	updateCurrentPosition(false);
 }
 
 void Printer::finishProbing() {
@@ -635,13 +635,13 @@ void Printer::transformToPrinter(float x,float y,float z,float &transX,float &tr
 	} else {
 		transX = x;
 		transY = y;
-		transZ = z;		
+		transZ = z;
 	}
 #else
 	transX = x;
 	transY = y;
 	transZ = z;
-#endif	
+#endif
 }
 
 /* Transform back to real printer coordinates. */
@@ -654,7 +654,7 @@ void Printer::transformFromPrinter(float x,float y,float z,float &transX,float &
 	} else {
 		transX = x;
 		transY = y;
-		transZ = z;		
+		transZ = z;
 	}
 #else
 	transX = x;
@@ -703,10 +703,10 @@ void Printer::buildTransformationMatrix(Plane &plane) {
     autolevelTransformation[3] /= len;
     autolevelTransformation[4] /= len;
     autolevelTransformation[5] /= len;
-	
+
     Com::printArrayFLN(Com::tTransformationMatrix,autolevelTransformation, 9, 6);
 }
-/* 
+/*
 void Printer::buildTransformationMatrix(float h1,float h2,float h3) {
     float ax = EEPROM::zProbeX2() - EEPROM::zProbeX1();
     float ay = EEPROM::zProbeY2() - EEPROM::zProbeY1();
