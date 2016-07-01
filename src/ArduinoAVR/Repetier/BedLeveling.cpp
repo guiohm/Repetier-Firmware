@@ -533,7 +533,7 @@ float Printer::runZProbe(bool first,bool last,uint8_t repeat,bool runStartScript
         Com::printFLN(PSTR("  which is in mm:"), (lastCorrection-(probeDepth-stepsRemainingAtZHit))/axisStepsPerMM[Z_AXIS]);
         if(r + 1 < repeat) {
             // go only shortest possible move up for repetitions
-            PrintLine::moveRelativeDistanceInSteps(0, 0, shortMove, 0, rinter::maxFeedrate[Z_AXIS], true, true);
+            PrintLine::moveRelativeDistanceInSteps(0, 0, shortMove, 0, Printer::maxFeedrate[Z_AXIS], true, true);
             if(Endstops::zProbe()) {
                 Com::printErrorFLN(PSTR("z-probe did not untrigger on repetitive measurement - maybe you need to increase distance!"));
                 return ILLEGAL_Z_PROBE;
