@@ -137,6 +137,7 @@ usage or for searching for memory induced errors. Switch it off for production, 
 #define HOME_ORDER_ZYX 6
 #define HOME_ORDER_ZXYTZ 7 // Needs hot hotend for correct homing
 #define HOME_ORDER_XYTZ 8 // Needs hot hotend for correct homing
+#define HOME_ORDER_YXTZ 9 // Needs hot hotend for correct homing
 
 #define NO_CONTROLLER 0
 #define UICONFIG_CONTROLLER 1
@@ -317,7 +318,7 @@ inline void memcopy4(void *dest,void *source) {
 #define Z2_MINMAX_PIN -1
 #endif
 
-#if MINMAX_HARDWARE_ENDSTOP_Z2 && Z2_MINMAX_PIN > -1 
+#if MINMAX_HARDWARE_ENDSTOP_Z2 && Z2_MINMAX_PIN > -1
 #define MULTI_ZENDSTOP_HOMING 1
 #define MULTI_ZENDSTOP_ALL 3
 #else

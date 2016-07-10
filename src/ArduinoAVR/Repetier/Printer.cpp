@@ -1741,6 +1741,7 @@ void Printer::homeAxis(bool xaxis,bool yaxis,bool zaxis) // home non-delta print
 	LaserDriver::laserOn = false;
 #endif
     float startX,startY,startZ;
+    bool YHomed = false;
     realPosition(startX, startY, startZ);
 #if !defined(HOMING_ORDER)
 #define HOMING_ORDER HOME_ORDER_XYZ
@@ -1780,7 +1781,7 @@ void Printer::homeAxis(bool xaxis,bool yaxis,bool zaxis) // home non-delta print
     if(zaxis) homeZAxis();
     if(yaxis) homeYAxis();
     if(xaxis) homeXAxis();
-#elif HOMING_ORDER == HOME_ORDER_ZXYTZ || HOMING_ORDER == HOME_ORDER_XYTZ
+#elif HOMING_ORDER == HOME_ORDER_ZXYTZ || HOMING_ORDER == HOME_ORDER_XYTZ || HOMING_ORDER == HOME_ORDER_YXTZ
 {
     float actTemp[NUM_EXTRUDER];
     for(int i = 0;i < NUM_EXTRUDER; i++)
@@ -1810,6 +1811,13 @@ void Printer::homeAxis(bool xaxis,bool yaxis,bool zaxis) // home non-delta print
     if(xaxis || zaxis)
 #endif
     {
+#if HOMING_ORDER == HOME_ORDER_YXTZ && ZHOME_Y_POS !== IGNORE_COORDINATE
+        if(zaxis)
+        {
+            homeYAxis();
+            YHomed = true;
+        }
+#endif
         homeXAxis();
 //#if ZHOME_X_POS == IGNORE_COORDINATE
         if(X_HOME_DIR < 0) startX = Printer::xMin;
@@ -1824,7 +1832,8 @@ void Printer::homeAxis(bool xaxis,bool yaxis,bool zaxis) // home non-delta print
     if(yaxis || zaxis)
 #endif
     {
-        homeYAxis();
+        if (!YHomed)
+            homeYAxis();
 //#if ZHOME_Y_POS == IGNORE_COORDINATE
         if(Y_HOME_DIR < 0) startY = Printer::yMin;
         else startY = Printer::yMin + Printer::yLength;
