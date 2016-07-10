@@ -1643,10 +1643,43 @@ void Printer::homeZAxis() // Cartesian homing
         currentPositionSteps[Z_AXIS] = -steps;
         setHoming(true);
 #if NONLINEAR_SYSTEM
-		transformCartesianStepsToDeltaSteps(currentPositionSteps, currentNonlinearPositionSteps);
+        transformCartesianStepsToDeltaSteps(currentPositionSteps, currentNonlinearPositionSteps);
 #endif
+        setZProbingActive(true);
         PrintLine::moveRelativeDistanceInSteps(0, 0, 2 * steps,0,homingFeedrate[Z_AXIS],true,true);
+        setZProbingActive(false);
         currentPositionSteps[Z_AXIS] = (Z_HOME_DIR == -1) ? zMinSteps : zMaxSteps;
+#if NOZZLE_IS_ENDSTOP
+        if (Z_HOME_DIR == -1) {
+            int32_t shortMove = axisStepsPerMM[Z_AXIS] * ENDSTOP_Z_BACK_MOVE;
+            int32_t cappedShortMove;
+            float cappedFeedRate;
+            int32_t longMove = axisStepsPerMM[Z_AXIS] * 2 * ENDSTOP_Z_BACK_MOVE;
+            for (int i = 1; i < 15; i++)
+            {
+                cappedShortMove = RMath::max(50.0, shortMove/i);
+                cappedFeedRate = RMath::max(0.12, static_cast<float>(homingFeedrate[Z_AXIS] / (ENDSTOP_Z_RETEST_REDUCTION_FACTOR*i)));
+#if NONLINEAR_SYSTEM
+                transformCartesianStepsToDeltaSteps(currentPositionSteps, currentNonlinearPositionSteps);
+#endif
+                PrintLine::moveRelativeDistanceInSteps(0, 0, cappedShortMove, 0, homingFeedrate[Z_AXIS]/ENDSTOP_Z_RETEST_REDUCTION_FACTOR,true,false);
+#if defined(ZHOME_WAIT_UNSWING) && ZHOME_WAIT_UNSWING > 0
+                HAL::delayMilliseconds(ZHOME_WAIT_UNSWING);
+#endif
+                setZProbingActive(true);
+                PrintLine::moveRelativeDistanceInSteps(0, 0, -longMove, 0, cappedFeedRate,true,true);
+                setZProbingActive(false);
+                currentPositionSteps[Z_AXIS] = zMinSteps;
+                Com::printF(PSTR("Delta (Target steps): "), longMove-stepsRemainingAtZHit-cappedShortMove);
+                Com::printF(PSTR(" ("), cappedShortMove);
+#if NONLINEAR_SYSTEM
+                Com::printFLN(PSTR(")  delta in microns: "), static_cast<float>((longMove-stepsRemainingAtZHit-cappedShortMove) * invAxisStepsPerMM[Z_AXIS] * 1000), 3);
+#else
+                Com::printFLN(PSTR(")  delta in microns: "), static_cast<float>((longMove-stepsRemainingAtZHit-cappedShortMove - zCorrectionStepsIncluded) * invAxisStepsPerMM[Z_AXIS] * 1000), 3);
+#endif
+            }
+        }
+#else
 #if NONLINEAR_SYSTEM
 		transformCartesianStepsToDeltaSteps(currentPositionSteps, currentNonlinearPositionSteps);
 #endif
@@ -1655,8 +1688,9 @@ void Printer::homeZAxis() // Cartesian homing
         HAL::delayMilliseconds(ZHOME_WAIT_UNSWING);
 #endif
         PrintLine::moveRelativeDistanceInSteps(0,0,axisStepsPerMM[Z_AXIS] * 2 * ENDSTOP_Z_BACK_MOVE * Z_HOME_DIR, 0, homingFeedrate[Z_AXIS] / ENDSTOP_Z_RETEST_REDUCTION_FACTOR,true,true);
+#endif // NOZZLE_IS_ENDSTOP
 #if Z_HOME_DIR < 0 && Z_PROBE_PIN == Z_MIN_PIN
-		Printer::finishProbing();
+        Printer::finishProbing();
 #endif
         setHoming(false);
 		int32_t zCorrection = 0;
@@ -1680,7 +1714,7 @@ void Printer::homeZAxis() // Cartesian homing
 #else
 		currentPositionSteps[Z_AXIS] -= zBedOffset * axisStepsPerMM[Z_AXIS]; // Correct bed coating
 #endif
-		//Com::printFLN(PSTR("Z-Correction-Steps:"),zCorrection);
+		Com::printFLN(PSTR("Z-Correction-Steps:"),zCorrection);
         PrintLine::moveRelativeDistanceInSteps(0,0,zCorrection,0,maxFeedrate[Z_AXIS],true,false);
         currentPositionSteps[Z_AXIS] = ((Z_HOME_DIR == -1) ? zMinSteps : zMaxSteps - Printer::zBedOffset * axisStepsPerMM[Z_AXIS]);
 #if NUM_EXTRUDER > 0
@@ -1837,8 +1871,6 @@ void Printer::homeAxis(bool xaxis,bool yaxis,bool zaxis) // home non-delta print
     {
         if(Z_HOME_DIR < 0) startZ = Printer::zMin;
         else startZ = Printer::zMin + Printer::zLength - Printer::zBedOffset;
-        startX = 77;
-        startY = -28;
     }
 #endif
     updateCurrentPosition(true);

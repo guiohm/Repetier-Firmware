@@ -882,6 +882,10 @@ on this endstop.
 #define max_software_endstop_y true
 #define max_software_endstop_z true
 
+// if you're using your nozzle as a contact sensor, this adds further moves to ensure
+// that oozing filament is not interfering.
+#define NOZZLE_IS_ENDSTOP true
+
 // If during homing the endstop is reached, ho many mm should the printer move back for the second try
 #define ENDSTOP_X_BACK_MOVE 10
 #define ENDSTOP_Y_BACK_MOVE 5
