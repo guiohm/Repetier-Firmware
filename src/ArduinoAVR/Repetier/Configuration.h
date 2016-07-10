@@ -827,10 +827,10 @@ on this endstop.
 
 // Set the values true where you have a hardware endstop. The Pin number is taken from pins.h.
 
-#define MIN_HARDWARE_ENDSTOP_X false
+#define MIN_HARDWARE_ENDSTOP_X true
 #define MIN_HARDWARE_ENDSTOP_Y true
 #define MIN_HARDWARE_ENDSTOP_Z true
-#define MAX_HARDWARE_ENDSTOP_X true
+#define MAX_HARDWARE_ENDSTOP_X false
 #define MAX_HARDWARE_ENDSTOP_Y false
 #define MAX_HARDWARE_ENDSTOP_Z false
 
@@ -865,7 +865,7 @@ on this endstop.
 
 //// ENDSTOP SETTINGS:
 // Sets direction of endstops when homing; 1=MAX, -1=MIN
-#define X_HOME_DIR 1
+#define X_HOME_DIR -1
 #define Y_HOME_DIR -1
 #define Z_HOME_DIR -1
 
@@ -887,21 +887,21 @@ on this endstop.
 #define NOZZLE_IS_ENDSTOP true
 
 // If during homing the endstop is reached, ho many mm should the printer move back for the second try
-#define ENDSTOP_X_BACK_MOVE 10
-#define ENDSTOP_Y_BACK_MOVE 5
+#define ENDSTOP_X_BACK_MOVE 4
+#define ENDSTOP_Y_BACK_MOVE 4
 #define ENDSTOP_Z_BACK_MOVE 1
 
 // For higher precision you can reduce the speed for the second test on the endstop
 // during homing operation. The homing speed is divided by the value. 1 = same speed, 2 = half speed
 #define ENDSTOP_X_RETEST_REDUCTION_FACTOR 3
 #define ENDSTOP_Y_RETEST_REDUCTION_FACTOR 3
-#define ENDSTOP_Z_RETEST_REDUCTION_FACTOR 2
+#define ENDSTOP_Z_RETEST_REDUCTION_FACTOR 1.5
 
 // When you have several endstops in one circuit you need to disable it after homing by moving a
 // small amount back. This is also the case with H-belt systems.
-#define ENDSTOP_X_BACK_ON_HOME 27
-#define ENDSTOP_Y_BACK_ON_HOME 1
-#define ENDSTOP_Z_BACK_ON_HOME 4.1
+#define ENDSTOP_X_BACK_ON_HOME 1
+#define ENDSTOP_Y_BACK_ON_HOME 0
+#define ENDSTOP_Z_BACK_ON_HOME 3.5
 
 // You can disable endstop checking for print moves. This is needed, if you get sometimes
 // false signals from your endstops. If your endstops don't give false signals, you
@@ -912,12 +912,12 @@ on this endstop.
 // For delta robot Z_MAX_LENGTH is the maximum travel of the towers and should be set to the distance between the hotend
 // and the platform when the printer is at its home position.
 // If EEPROM is enabled these values will be overridden with the values in the EEPROM
-#define X_MAX_LENGTH 307 // 285 + 22
+#define X_MAX_LENGTH 325 // 285 + 22
 #define Y_MAX_LENGTH 223 // 195 + 28
-#define Z_MAX_LENGTH 260
+#define Z_MAX_LENGTH 282
 // Coordinates for the minimum axis. Can also be negative if you want to have the bed start at 0 and the printer can go to the left side
 // of the bed. Maximum coordinate is given by adding the above X_MAX_LENGTH values.
-#define X_MIN_POS -22
+#define X_MIN_POS -25
 #define Y_MIN_POS -28
 #define Z_MIN_POS 0
 
